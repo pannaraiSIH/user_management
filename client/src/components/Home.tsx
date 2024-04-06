@@ -37,7 +37,7 @@ const Home = () => {
       const pages = Math.ceil(total / limit);
 
       setUsers(users);
-      setTotalPages(total !== 0 ? pages : 1);
+      setTotalPages(pages);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -77,6 +77,7 @@ const Home = () => {
 
   useEffect(() => {
     setNameSurname("");
+    setTotalPages(0);
 
     const fetchData = async () => {
       setLoading(true);
@@ -86,12 +87,13 @@ const Home = () => {
         );
         const { users, total } = res.data;
         const pages = Math.ceil(total / limit);
-
+        console.log(pages);
         setUsers(users);
         setTotalPages(pages);
         setLoading(false);
       } catch (error) {
         setLoading(false);
+
         console.log(error);
       }
     };
@@ -155,29 +157,31 @@ const Home = () => {
               handleDeleteUser={handleDeleteUser}
             />
 
-            <div className='flex items-center justify-end gap-2 text-gray-500 font-semibold'>
-              <button className='py-1 px-2' onClick={handlePrevPage}>
-                &lt;
-              </button>
-              <ul className='flex gap-2'>
-                {Array.from(
-                  { length: totalPages },
-                  (_, index) => index + 1
-                ).map((item, index) => (
-                  <li
-                    key={item}
-                    className={`${
-                      pageIndex === index ? "font-bold text-gray-600" : ""
-                    }`}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <button className='py-1 px-2' onClick={handleNextPage}>
-                &gt;
-              </button>
-            </div>
+            {totalPages !== 0 && (
+              <div className='flex items-center justify-end gap-2 text-gray-500 font-semibold'>
+                <button className='py-1 px-2' onClick={handlePrevPage}>
+                  &lt;
+                </button>
+                <ul className='flex gap-2'>
+                  {Array.from(
+                    { length: totalPages },
+                    (_, index) => index + 1
+                  ).map((item, index) => (
+                    <li
+                      key={item}
+                      className={`${
+                        pageIndex === index ? "font-bold text-gray-600" : ""
+                      }`}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <button className='py-1 px-2' onClick={handleNextPage}>
+                  &gt;
+                </button>
+              </div>
+            )}
           </>
         )}
       </main>
